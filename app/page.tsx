@@ -139,6 +139,10 @@ export default function Home() {
   }
 
   function draftPlayer(player: Player) {
+    if (!canDraftPlayer(player)) {
+      return;
+    }
+
     const newTeam = [...team, player];
 
     setTeam(newTeam);
@@ -507,6 +511,7 @@ export default function Home() {
                     key={player.name}
                     player={player}
                     onClick={() => draftPlayer(player)}
+                    disabled={!canDraftPlayer(player)}
                   />
                 ))}
               </div>
@@ -583,14 +588,18 @@ function getPlayerPortrait(playerName: string) {
 function PlayerCard({
   player,
   onClick,
+  disabled,
 }: {
   player: Player;
   onClick: () => void;
+  disabled?: boolean,
 }) {
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-4 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl p-3 w-80 text-left"
+      className="flex items-center gap-4 bg-zinc-800 
+      hover:bg-zinc-700 disabled:bg-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed border border-zinc-700 rounded-xl p-3 w-80 text-left"
+      disabled={disabled}
     >
     <img
       src={`/players/${getPlayerPortrait(player.name)}.webp`}

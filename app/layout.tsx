@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "OW Draft Mayhem",
+  title: "OWCS Draft Mayhem",
   description: "Overwatch draft simulator",
 };
 
