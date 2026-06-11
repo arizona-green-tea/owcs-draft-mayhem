@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { players } from "../data/players";
 import { Player } from "../types/player";
 import { PlayerCard } from "../components/PlayerCard";
-import { TeamLineup } from "../components/TeamLineup";
+import { MatchIntro } from "../components/MatchIntro";
+import { MatchSimulation } from "../components/MatchSimulation";
 import { getRoleIcon, getTeamLogo, getMapImage } from "../lib/assets";
 import {
   generateEnemyTeam,
@@ -285,156 +286,29 @@ export default function Home() {
         </>
       )}
       {showMatchIntro && matchResult && (
-        <section className="mt-8 mb-8 w-full max-w-7xl bg-zinc-900 border border-zinc-700 rounded-xl p-6">
-          {(() => {
-            const currentGame = matchResult.games[currentGameIndex];
-
-            return (
-              <div className="grid grid-cols-3 gap-8 items-start">
-                <TeamLineup title="Your Team" team={team} />
-
-                <div className="flex flex-col items-center text-center">
-                  <h2 className="text-3xl font-bold mb-4">
-                    {rounds[roundIndex]}
-                  </h2>
-
-                  <img
-                    src={getMapImage(currentGame.mapName)}
-                    alt={currentGame.mapName}
-                    className="w-full max-w-[700px] aspect-video object-cover rounded-xl mb-4 border border-zinc-700"
-                  />
-
-                  <h3 className="text-2xl font-bold mb-6">
-                    {currentGame.mapName}
-                  </h3>
-
-                  <div className="text-5xl font-bold text-zinc-400 mb-6">
-                    VS
-                  </div>
-
-                  <button
-                    onClick={startMatch}
-                    className="bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-lg font-bold"
-                  >
-                    Start Match
-                  </button>
-                </div>
-
-                <TeamLineup title="Enemy Team" team={enemyTeam} />
-              </div>
-            );
-          })()}
-        </section>
+          <MatchIntro
+            team={team}
+            enemyTeam={enemyTeam}
+            matchResult={matchResult}
+            currentGameIndex={currentGameIndex}
+            roundName={rounds[roundIndex]}
+            onStartMatch={startMatch}
+          />
       )}
 
       {matchResult && !showMatchIntro && (
-        <section className="mt-8 mb-8 w-full max-w-7xl bg-zinc-900 border border-zinc-700 rounded-xl p-6">
-          {(() => {
-            const currentGame = matchResult.games[currentGameIndex];
-            const visibleEvents = currentGame.events.slice(0, visibleEventCount);
-
-            const revealedGames = matchResult.games.slice(0, currentGameIndex);
-
-            const revealedWins = revealedGames.filter(
-              game => game.won
-            ).length;
-
-            const revealedLosses = revealedGames.filter(
-              game => !game.won
-            ).length;
-
-            const liveWins =
-              revealedWins +
-              (gameFinished && currentGame.won ? 1 : 0);
-
-            const liveLosses =
-              revealedLosses +
-              (gameFinished && !currentGame.won ? 1 : 0);
-
-            return (
-              <div className="grid grid-cols-3 gap-8 items-start">
-
-                {/* YOUR TEAM */}
-                <TeamLineup
-                  title="Your Team"
-                  team={team}
-                />
-
-                {/* MATCH CENTER */}
-                <div className="flex flex-col items-center text-center">
-
-                  <h2 className="text-3xl font-bold mb-4">
-                    {rounds[roundIndex]}
-                  </h2>
-
-                  <img
-                    src={getMapImage(currentGame.mapName)}
-                    alt={currentGame.mapName}
-                    className="w-full max-w-[700px] aspect-video object-cover rounded-xl mb-4 border border-zinc-700"
-                  />
-
-                  <h3 className="text-2xl font-bold mb-2">
-                    {currentGame.mapName}
-                  </h3>
-
-                  <p className="text-zinc-400 mb-6">
-                    Game {currentGame.gameNumber} ·
-                    Series {liveWins} - {liveLosses}
-                  </p>
-
-                  <div className="space-y-3 mb-6 min-h-[140px]">
-                    {visibleEvents.map((event, index) => (
-                      <p
-                        key={index}
-                        className={
-                          event.positive
-                            ? "text-green-400 text-lg"
-                            : "text-red-400 text-lg"
-                        }
-                      >
-                        {event.positive ? "+" : "-"} {event.text}
-                      </p>
-                    ))}
-                  </div>
-
-                  {gameFinished && (
-                    <div
-                      className={
-                        currentGame.won
-                          ? "text-green-400 text-3xl font-bold mb-4"
-                          : "text-red-400 text-3xl font-bold mb-4"
-                      }
-                    >
-                      {currentGame.won
-                        ? "GAME WON"
-                        : "GAME LOST"}
-                    </div>
-                  )}
-
-                  {message && !result && (
-                    <button
-                      onClick={nextRound}
-                      className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-bold"
-                    >
-                      Next Round
-                    </button>
-                  )}
-                  {!message && !result && (
-                    <p className="text-zinc-400 mt-2">
-                      Simulating...
-                    </p>
-                  )}
-                </div>
-
-                {/* ENEMY TEAM */}
-                <TeamLineup
-                  title="Enemy Team"
-                  team={enemyTeam}
-                />
-              </div>
-            );
-          })()}
-        </section>
+        <MatchSimulation
+          team={team}
+          enemyTeam={enemyTeam}
+          matchResult={matchResult}
+          currentGameIndex={currentGameIndex}
+          visibleEventCount={visibleEventCount}
+          gameFinished={gameFinished}
+          roundName={rounds[roundIndex]}
+          message={message}
+          result={result}
+          nextRound={nextRound}
+        />
       )}
       
       {!result && team.length < 5 && (
