@@ -49,14 +49,16 @@ export function MatchSimulation({
 
     return (
         <section className="mt-8 mb-8 w-full max-w-7xl bg-zinc-900 border border-zinc-700 rounded-xl p-6">
-            <div className="grid grid-cols-3 gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
-            <TeamLineup
-                title="Your Team"
-                team={team}
-            />
+            <div className="order-2 lg:order-1">
+                <TeamLineup 
+                    title="Your Team" 
+                    team={team} 
+                />
+            </div>
 
-            <div className="flex flex-col items-center text-center">
+            <div className="order-1 lg:order-2 flex flex-col items-center text-center">
 
                 <h2 className="text-3xl font-bold mb-4">
                 {roundName}
@@ -128,11 +130,12 @@ export function MatchSimulation({
                 )}
             </div>
 
-            {/* ENEMY TEAM */}
-            <TeamLineup
-                title="Enemy Team"
-                team={enemyTeam}
-            />
+            <div className="order-3">
+                <TeamLineup 
+                    title="Enemy Team" 
+                    team={enemyTeam} 
+                />
+            </div>
             </div>
         </section>
     );
