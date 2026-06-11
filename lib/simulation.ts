@@ -105,13 +105,13 @@ const positiveMessages = [
   "remembered they are HIM.",
   "activated carry mode.",
   "farmed the enemy supports.",
-  "got a 5K in overtime.",
+  "got a 5k in overtime.",
   "forced a c9 panic touch.",
   "won the mental game.",
   "had unreal mechanics that fight.",
   "made the enemy team look lost.",
   "perfectly timed the re-engage.",
-  "absolutely rolled the neutral.",
+  "absolutely rolled in the neutral.",
   "won despite being down players.",
   "carried the map kicking and screaming.",
   "hard punished the enemy positioning.",
@@ -119,8 +119,10 @@ const positiveMessages = [
   "hit a cross-map pick.",
   "made the overtime touch.",
   "won every duel that map.",
-  "diffed the enemy tank.",
-  "had unreal target focus."
+  "diffed the enemy mirror.",
+  "had unreal target focus.",
+  "found a fight winning boop.",
+  "just wanted it more."
 ];
 
 const negativeMessages = [
@@ -130,7 +132,7 @@ const negativeMessages = [
   "loses an opening duel.",
   "gets staggered before overtime.",
   "fails to touch the objective.",
-  "C9's the objective.",
+  "c9's the objective.",
   "died while ulting.",
   "forgot to press Q.",
   "got a paypal notification.",
@@ -173,7 +175,14 @@ const negativeMessages = [
   "had the supports screaming.",
   "tilted after one death.",
   "forgot to regroup.",
-  "was sent back to spawn repeatedly."
+  "was sent back to spawn repeatedly.",
+  "got cat-napped.",
+  "ate a full zen volley to the face.",
+  "walked straight into mines.",
+  "didn't know what they were aiming at.",
+  "emptied a whole clip into a wall.",
+  "took tp into a pit.",
+  "forgot where the health packs were."
 ];
 
 function getRandomPlayer(team: Player[]) {

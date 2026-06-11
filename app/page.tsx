@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import { players } from "../data/players";
 import { Player } from "../types/player";
+import { PlayerCard } from "../components/PlayerCard";
+import { TeamLineup } from "../components/TeamLineup";
+import { getRoleIcon, getTeamLogo, getMapImage } from "../lib/assets";
 import {
   generateEnemyTeam,
   getTeamNames,
@@ -556,137 +559,5 @@ export default function Home() {
       </div>
     )}
     </main>
-  );
-}
-
-function getRoleIcon(role: Player["role"]) {
-  if (role === "Tank") {
-    return "/roles/tank.png";
-  }
-
-  if (role === "DPS") {
-    return "/roles/dps.png";
-  }
-
-  return "/roles/support.png";
-}
-
-function getTeamLogo(team: string) {
-  return `/logos/${team
-    .toLowerCase()
-    .replace(/\./g, "")
-    .replace(/\s+/g, "-")}.png`;
-}
-
-function getPlayerPortrait(playerName: string) {
-  return playerName
-    .toLowerCase()
-    .replace(/\./g, "")
-    .replace(/\s+/g, "-");
-}
-
-function PlayerCard({
-  player,
-  onClick,
-  disabled,
-}: {
-  player: Player;
-  onClick: () => void;
-  disabled?: boolean,
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex items-center gap-4 bg-zinc-800 
-      hover:bg-zinc-700 disabled:bg-zinc-900 disabled:opacity-50 disabled:cursor-not-allowed border border-zinc-700 rounded-xl p-3 w-80 text-left"
-      disabled={disabled}
-    >
-    <img
-      src={`/players/${getPlayerPortrait(player.name)}.webp`}
-      alt={player.name}
-      onError={e => {
-          e.currentTarget.src = "/players/default.webp";
-      }}
-      className="w-20 h-20 object-cover rounded-lg bg-zinc-900 shrink-0"
-    />
-
-      <div className="flex items-center gap-2 min-w-0">
-        <img
-          src={getRoleIcon(player.role)}
-          alt={player.role}
-          className="w-6 h-6 shrink-0"
-        />
-
-        <span className="text-xl font-bold truncate">
-          {player.name}
-        </span>
-      </div>
-    </button>
-  );
-}
-
-function getMapImage(mapName: string) {
-  return `/maps/${mapName
-    .toLowerCase()
-    .replace(/:/g, "")
-    .replace(/'/g, "")
-    .replace(/ç/g, "c")
-    .replace(/\s+/g, "-")}.jpg`;
-}
-
-const roleOrder = {
-  Tank: 0,
-  DPS: 1,
-  Support: 2,
-};
-
-function sortRoster(team: Player[]) {
-  return [...team].sort((a, b) => roleOrder[a.role] - roleOrder[b.role]);
-}
-
-function TeamLineup({
-  title,
-  team,
-}: {
-  title: string;
-  team: Player[];
-}) {
-  return (
-    <div>
-      <h3 className="text-xl font-bold mb-4">{title}</h3>
-
-      <div className="space-y-3">
-        {sortRoster(team).map(player => (
-          <div
-            key={player.name}
-            className="flex items-center gap-3 bg-zinc-800 rounded-lg px-3 py-2"
-          >
-            <img
-              src={`/players/${getPlayerPortrait(player.name)}.webp`}
-              alt={player.name}
-              onError={e => {
-                  e.currentTarget.src = "/players/default.webp";
-              }}
-              className="w-12 h-12 object-cover rounded-lg bg-zinc-900 shrink-0"
-            />
-
-            <div className="min-w-0">
-              <div className="flex items-center gap-2 text-zinc-400">
-                <img
-                  src={getRoleIcon(player.role)}
-                  alt={player.role}
-                  className="w-4 h-4"
-                />
-                <span className="text-xs">{player.role}</span>
-              </div>
-
-              <div className="font-bold truncate">
-                {player.name}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }
