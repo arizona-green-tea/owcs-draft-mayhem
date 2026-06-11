@@ -71,7 +71,7 @@ export function MatchSimulation({
                     />
 
                     <h3 className="text-2xl font-bold mb-2">
-                    {currentGame.mapName}
+                    {currentGame.mode} · {currentGame.mapName}
                     </h3>
 
                     <p className="text-zinc-400 mb-6">

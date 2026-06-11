@@ -51,6 +51,7 @@ export type MatchEvent = {
 
 export type GameResult = {
   gameNumber: number;
+  mode: string;
   mapName: string;
   won: boolean;
   yourScore: number;
@@ -65,17 +66,58 @@ export type MatchResult = {
   wonMatch: boolean;
 };
 
-const maps = [
-  "Lijiang Tower",
-  "King's Row",
-  "Circuit Royal",
-  "Esperança",
-  "Suravasa",
-  "Colosseo",
-  "Watchpoint: Gibraltar",
-  "Numbani",
-  "Ilios",
-];
+const mapsByMode = {
+  Control: [
+    "Ilios",
+    "Lijiang Tower",
+    "Nepal",
+    "Samoa",
+    "Antarctic Peninsula",
+    "Busan",
+    "Oasis",
+  ],
+
+  Hybrid: [
+    "Blizzard World",
+    "King's Row",
+    "Midtown",
+    "Hollywood",
+    "Eichenwalde",
+    "Numbani",
+    "Paraiso",
+  ],
+
+  Push: [
+    "Colosseo",
+    "Esperanca",
+    "New Queen Street",
+    "Runasapi",
+  ],
+
+  Escort: [
+    "Circuit Royale",
+    "Dorado",
+    "Rialto",
+    "Shambali Monastery",
+    "Havana",
+    "Junkertown",
+    "Watchpoint: Gibraltar",
+    "Route 66",
+  ],
+
+  Flashpoint: [
+    "New Junk City",
+    "Suravasa",
+    "Aatlis",
+  ],
+};
+type MapMode = keyof typeof mapsByMode;
+
+const modeOrders = {
+  2: ["Control", "Hybrid", "Escort", "Flashpoint"],
+  3: ["Control", "Hybrid", "Push", "Flashpoint", "Escort", "Control", "Push"],
+  4: ["Control", "Hybrid", "Push", "Flashpoint", "Escort", "Control", "Escort", "Push", "Escort", "Control"],
+} as const;
 
 const positiveMessages = [
   "scores an ace!",
@@ -208,10 +250,9 @@ function getRandomMessage(team: Player[], positive: boolean): MatchEvent {
   };
 }
 
-function getRandomMap(usedMaps: string[]) {
-  const availableMaps = maps.filter(map => !usedMaps.includes(map));
-  return availableMaps[Math.floor(Math.random() * availableMaps.length)];
-}
+function randomChoice<T>(array: T[]): T { return array[Math.floor(Math.random() * array.length)]; } 
+
+function getRandomMap(mode: MapMode) { return randomChoice([...mapsByMode[mode]]); }
 
 
 export function getTeamScore(team: Player[]) {
@@ -292,10 +333,11 @@ export function generateEnemyTeam(
   return enemyTeam;
 }
 
+type RequiredWins = 2 | 3 | 4;
 export function simulateSeries(
   yourTeam: Player[],
   enemyTeam: Player[],
-  requiredWins = 3
+  requiredWins: RequiredWins
 ): MatchResult {
   const games: GameResult[] = [];
   const usedMaps: string[] = [];
@@ -304,8 +346,12 @@ export function simulateSeries(
   let losses = 0;
   let yourMomentum = 0;
   let enemyMomentum = 0;
-
+  const modeOrder = modeOrders[requiredWins];
+  
   while (wins < requiredWins && losses < requiredWins) {
+    const mode = modeOrder[games.length] as MapMode;
+    const mapName = getRandomMap(mode);
+    
     const yourMapBonus = Math.floor(Math.random() * 21) - 10;
     const enemyMapBonus = Math.floor(Math.random() * 21) - 10;
 
@@ -341,12 +387,12 @@ export function simulateSeries(
     }
 
     events.push(getRandomMessage(yourTeam, won));
-
-    const mapName = getRandomMap(usedMaps);
+    
     usedMaps.push(mapName);
 
     games.push({
       gameNumber: games.length + 1,
+      mode,
       mapName,
       won,
       yourScore,

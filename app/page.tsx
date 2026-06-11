@@ -134,7 +134,7 @@ export default function Home() {
       currentRoundIndex
     );
 
-    let requiredWins = 3;
+    let requiredWins: 2 | 3 | 4 = 3;
     if ( currentRoundIndex === rounds.length - 1) {
       requiredWins = 4;
     } else if (currentRoundIndex === 0) {
