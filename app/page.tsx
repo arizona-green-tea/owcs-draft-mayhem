@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { players } from "../data/players";
 import { Player } from "../types/player";
-import { PlayerCard } from "../components/PlayerCard";
+import { Results } from "../components/Results";
 import { MatchIntro } from "../components/MatchIntro";
 import { MatchSimulation } from "../components/MatchSimulation";
 import { TeamSelect } from "../components/TeamSelect";
+import { Roster } from "../components/Roster";
 
 import {
   generateEnemyTeam,
@@ -43,7 +44,16 @@ export default function Home() {
     : [];
 
   const [showMatchIntro, setShowMatchIntro] = useState(false);
+  const [showTeamReveal, setShowTeamReveal] = useState(false);
   const draftablePlayers = players.filter(player => canDraftPlayer(player));
+  const [roundHistory, setRoundHistory] = useState<
+    {
+      roundName: string;
+      won: boolean;
+      wins: number;
+      losses: number;
+    }[]
+  >([]);
 
   function canDraftPlayer(player: Player) {
     if (team.some(drafted => drafted.name === player.name)) {
@@ -85,7 +95,7 @@ export default function Home() {
     );
 
     const shuffled = weightedShuffle(availableTeamNames);
-    const selected = shuffled.slice(0, 2);
+    const selected = shuffled.slice(0, 3);
 
     setTeamChoices(selected);
     setTeamAppearances(prev => {
@@ -148,6 +158,7 @@ export default function Home() {
     if (!canDraftPlayer(player)) {
       return;
     }
+    
 
     const newTeam = [...team, player];
 
@@ -155,8 +166,13 @@ export default function Home() {
     setSelectedTeam(null);
 
     if (newTeam.length === 5) {
-      simulateRound(newTeam);
+      setShowTeamReveal(true);
     }
+  }
+
+  function startFirstMatch() {
+    setShowTeamReveal(false);
+    simulateRound(team);
   }
 
   function advanceMatchLog() {
@@ -165,7 +181,6 @@ export default function Home() {
     }
 
     const currentGame = matchResult.games[currentGameIndex];
-
     if (visibleEventCount < currentGame.events.length) {
       setVisibleEventCount(visibleEventCount + 1);
       return;
@@ -185,6 +200,14 @@ export default function Home() {
       return;
     }
 
+    const completedRound = {
+      roundName: rounds[roundIndex],
+      won: matchResult.wonMatch,
+      wins: matchResult.wins,
+      losses: matchResult.losses,
+    };
+
+    setRoundHistory(prev => [...prev, completedRound]);
     if (!matchResult.wonMatch) {
       setResult(
         `Eliminated in ${rounds[roundIndex]} (${matchResult.wins} - ${matchResult.losses})`
@@ -268,6 +291,7 @@ export default function Home() {
     setCurrentGameIndex(0);
     setVisibleEventCount(0);
     setGameFinished(false);
+    setRoundHistory([]);
   }
 
   return (
@@ -275,96 +299,91 @@ export default function Home() {
       <h1 className="text-4xl font-bold mb-8">
         OWCS Draft Mayhem
       </h1>
-      {!matchResult && (
+      {result && (
+        <Results
+          result={result}
+          team={team}
+          roundHistory={roundHistory}
+          onNewGame={resetGame}
+        />
+      )}
+      {!result && (
         <>
-          <section className="mb-8 w-full max-w-6xl">
-            <h2 className="text-2xl font-bold mb-4">Your Team</h2>
-            <div className="flex flex-wrap gap-4">
-              {team.map(player => (
-                <PlayerCard key={player.name} player={player} onClick={() => draftPlayer(player)} />
-              ))}
-            </div>
-          </section>
+          {!matchResult && !showTeamReveal && (
+            <Roster team={team} />
+          )}
+          {showTeamReveal && (
+            <section className="mt-8 mb-8 w-full max-w-7xl bg-zinc-900 border border-zinc-700 rounded-xl p-6 text-center">
+              <Roster team={team} />
+              <button
+                onClick={startFirstMatch}
+                className="mt-6 bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-lg font-bold"
+              >
+                Continue
+              </button>
+            </section>
+          )}
+          {showMatchIntro && matchResult && (
+              <MatchIntro
+                team={team}
+                enemyTeam={enemyTeam}
+                matchResult={matchResult}
+                currentGameIndex={currentGameIndex}
+                roundName={rounds[roundIndex]}
+                onStartMatch={startMatch}
+              />
+          )}
+
+          {matchResult && !showMatchIntro && (
+            <MatchSimulation
+              team={team}
+              enemyTeam={enemyTeam}
+              matchResult={matchResult}
+              currentGameIndex={currentGameIndex}
+              visibleEventCount={visibleEventCount}
+              gameFinished={gameFinished}
+              roundName={rounds[roundIndex]}
+              message={message}
+              result={result}
+              nextRound={nextRound}
+            />
+          )}
+          
+          {!result && !showTeamReveal && team.length < 5 && (
+            <TeamSelect
+              roleCounts={roleCounts}
+              teamChoices={teamChoices}
+              selectedTeam={selectedTeam}
+              playerChoices={
+                selectedTeam
+                  ? playerChoices
+                  : draftablePlayers
+              }
+              setSelectedTeam={setSelectedTeam}
+              backToTeams={() => setSelectedTeam(null)}
+              draftPlayer={draftPlayer}
+              canDraftPlayer={canDraftPlayer}
+            />
+          )}
+        <div className="flex gap-4 mt-6">
+          {!result &&
+            !selectedTeam &&
+            !matchResult &&
+            !showMatchIntro && 
+            !showTeamReveal &&
+            (
+            <button
+              onClick={rerollTeams}
+              disabled={rerollsLeft === 0}
+              className="bg-blue-500 hover:bg-blue-600 disabled:bg-zinc-700 disabled:text-zinc-400 px-4 py-2 rounded-lg font-bold"
+            >
+              Reroll ({rerollsLeft})
+            </button>
+          )}
+
+        </div>
         </>
       )}
-      {showMatchIntro && matchResult && (
-          <MatchIntro
-            team={team}
-            enemyTeam={enemyTeam}
-            matchResult={matchResult}
-            currentGameIndex={currentGameIndex}
-            roundName={rounds[roundIndex]}
-            onStartMatch={startMatch}
-          />
-      )}
-
-      {matchResult && !showMatchIntro && (
-        <MatchSimulation
-          team={team}
-          enemyTeam={enemyTeam}
-          matchResult={matchResult}
-          currentGameIndex={currentGameIndex}
-          visibleEventCount={visibleEventCount}
-          gameFinished={gameFinished}
-          roundName={rounds[roundIndex]}
-          message={message}
-          result={result}
-          nextRound={nextRound}
-        />
-      )}
-      
-      {!result && team.length < 5 && (
-        <TeamSelect
-          roleCounts={roleCounts}
-          teamChoices={teamChoices}
-          selectedTeam={selectedTeam}
-          playerChoices={
-            selectedTeam
-              ? playerChoices
-              : draftablePlayers
-          }
-          setSelectedTeam={setSelectedTeam}
-          backToTeams={() => setSelectedTeam(null)}
-          draftPlayer={draftPlayer}
-          canDraftPlayer={canDraftPlayer}
-        />
-      )}
-
-      {message && (
-        <div className="text-2xl font-bold mt-8">
-          {message}
-        </div>
-      )}
-
-    <div className="flex gap-4 mt-6">
-      {!result &&
-        !selectedTeam &&
-        !matchResult &&
-        !showMatchIntro && (
-        <button
-          onClick={rerollTeams}
-          disabled={rerollsLeft === 0}
-          className="bg-blue-500 hover:bg-blue-600 disabled:bg-zinc-700 disabled:text-zinc-400 px-4 py-2 rounded-lg font-bold"
-        >
-          Reroll ({rerollsLeft})
-        </button>
-      )}
-      {result && (
-        <div className="text-3xl font-bold mt-8">
-          {result}
-        </div>
-      )}
-    </div>
-    {result && (
-      <div className="flex gap-4 mt-6">
-        <button
-          onClick={resetGame}
-          className="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-lg font-bold"
-        >
-          New Game
-        </button>
-      </div>
-    )}
     </main>
   );
 }

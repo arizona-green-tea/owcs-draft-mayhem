@@ -105,14 +105,21 @@ export function MatchSimulation({
                     : "GAME LOST"}
                 </div>
                 )}
+                {message && (
+                    <div className="flex flex-col items-center gap-4 mt-8">
+                        <div className="text-2xl font-bold">
+                        {message}
+                        </div>
 
-                {message && !result && (
-                <button
-                    onClick={nextRound}
-                    className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-bold"
-                >
-                    Next Round
-                </button>
+                        {!result && (
+                        <button
+                            onClick={nextRound}
+                            className="bg-green-500 hover:bg-green-600 px-5 py-3 rounded-lg font-bold text-lg"
+                        >
+                            Next Round
+                        </button>
+                        )}
+                    </div>
                 )}
                 {!message && !result && (
                 <p className="text-zinc-400 mt-2">

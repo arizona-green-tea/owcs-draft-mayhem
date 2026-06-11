@@ -30,10 +30,6 @@ export function TeamSelect({
             <h2 className="text-2xl font-bold mb-4">
                 Pick a Team
             </h2>
-            <p className="text-zinc-400 mb-4">
-                Tank {roleCounts.Tank}/1 · DPS {roleCounts.DPS}/2 · Support {roleCounts.Support}/2
-            </p>
-
             {!selectedTeam && (
                 <div className="flex flex-wrap gap-4">
                 {teamChoices.map(teamName => {

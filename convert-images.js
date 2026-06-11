@@ -4,7 +4,7 @@ const sharp = require("sharp");
 
 const inputDir = path.join(__dirname, "public", "players");
 
-const SIZE = 128;
+const SIZE = 256;
 
 async function convertImages() {
   const files = fs.readdirSync(inputDir);

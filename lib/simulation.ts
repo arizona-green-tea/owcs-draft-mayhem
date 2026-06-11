@@ -29,12 +29,19 @@ const teamTiers: Record<string, number> = {
 
   "All Gamers": 2,
   "Al Qadsiah": 2,
+  "Superbad": 2,
+  "Poker Face": 2,
+  "Cheeseburger": 2,
 
   "Team Secret": 1,
   "SHENGSHI": 1,
   "Solus Victorem": 1,
   "LuneX Gaming": 1,
-  "Disguised": 1
+  "Disguised": 1,
+  "1234": 1,
+  "Telacity": 1,
+  "The Kafe": 1,
+  "Team Peps": 1,
 };
 
 export type MatchEvent = {
@@ -214,17 +221,6 @@ export function getTeamScore(team: Player[]) {
   return baseScore + variance;
 }
 
-export function getRandomChoices(
-  availablePlayers: Player[],
-  role: Role,
-  count = 3
-) {
-  return [...availablePlayers]
-    .filter(player => player.role === role)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, count);
-}
-
 export function getAvailableTeams(
   availablePlayers: Player[],
   role: Role
@@ -246,12 +242,8 @@ function getAllowedTiers(roundIndex: number) {
   }
 
   if (roundIndex === 1) {
-    return [2, 3, 4];
+    return [2, 3, 4, 5];
   } 
-
-  if (roundIndex === 2) {
-    return [4, 5];
-  }
 
   return [4, 5];
 }
