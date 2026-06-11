@@ -6,7 +6,8 @@ import { Player } from "../types/player";
 import { PlayerCard } from "../components/PlayerCard";
 import { MatchIntro } from "../components/MatchIntro";
 import { MatchSimulation } from "../components/MatchSimulation";
-import { getRoleIcon, getTeamLogo, getMapImage } from "../lib/assets";
+import { TeamSelect } from "../components/TeamSelect";
+
 import {
   generateEnemyTeam,
   getTeamNames,
@@ -29,8 +30,7 @@ export default function Home() {
   const [matchResult, setMatchResult] = useState<MatchResult | null>(null);
   const [currentGameIndex, setCurrentGameIndex] = useState(0);
   const [visibleEventCount, setVisibleEventCount] = useState(0);
-  const [gameFinished, setGameFinished] = useState(false);
-  
+  const [gameFinished, setGameFinished] = useState(false);  
   const [teamChoices, setTeamChoices] = useState<string[]>([]);
   const roleCounts = {
     Tank: team.filter(player => player.role === "Tank").length,
@@ -43,6 +43,8 @@ export default function Home() {
     : [];
 
   const [showMatchIntro, setShowMatchIntro] = useState(false);
+  const draftablePlayers = players.filter(player => canDraftPlayer(player));
+
   function canDraftPlayer(player: Player) {
     if (team.some(drafted => drafted.name === player.name)) {
       return false;
@@ -312,89 +314,20 @@ export default function Home() {
       )}
       
       {!result && team.length < 5 && (
-        <section className="mb-8  w-full max-w-6xl">
-          <h2 className="text-2xl font-bold mb-4">
-            Pick a Team
-          </h2>
-          <p className="text-zinc-400 mb-4">
-            Tank {roleCounts.Tank}/1 · DPS {roleCounts.DPS}/2 · Support {roleCounts.Support}/2
-          </p>
-
-          {!selectedTeam && (
-            <div className="flex flex-wrap gap-4">
-            {teamChoices.map(teamName => {
-            const teamPlayers = players.filter(
-              player => player.team === teamName && canDraftPlayer(player)
-            );
-
-            return (
-              <button
-                key={teamName}
-                onClick={() => setSelectedTeam(teamName)}
-                className="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl p-4 w-72 text-left"
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src={getTeamLogo(teamName)}
-                    alt={teamName}
-                    className="w-10 h-10 object-contain"
-                  />
-
-                  <h3 className="text-xl font-bold">
-                    {teamName}
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 text-zinc-300">
-                  {teamPlayers.map(player => (
-                    <div
-                      key={player.name}
-                      className="flex items-center gap-1 bg-zinc-900 rounded-md px-2 py-1 min-w-0"
-                    >
-                      <img
-                        src={getRoleIcon(player.role)}
-                        alt={player.role}
-                        className="w-4 h-4 shrink-0"
-                      />
-
-                      <span className="text-sm">
-                        {player.name}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </button>
-            );
-          })}
-            </div>
-          )}
-
-          {selectedTeam && (
-            <>
-              <button
-                onClick={() => setSelectedTeam(null)}
-                className="mb-4 bg-zinc-700 hover:bg-zinc-600 px-4 py-2 rounded-lg"
-              >
-                Back to Teams
-              </button>
-
-              <h3 className="text-xl font-bold mb-4">
-                Pick a Player from {selectedTeam}
-              </h3>
-
-              <div className="flex flex-wrap gap-4">
-                {playerChoices.map(player => (
-                  <PlayerCard
-                    key={player.name}
-                    player={player}
-                    onClick={() => draftPlayer(player)}
-                    disabled={!canDraftPlayer(player)}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-        </section>
+        <TeamSelect
+          roleCounts={roleCounts}
+          teamChoices={teamChoices}
+          selectedTeam={selectedTeam}
+          playerChoices={
+            selectedTeam
+              ? playerChoices
+              : draftablePlayers
+          }
+          setSelectedTeam={setSelectedTeam}
+          backToTeams={() => setSelectedTeam(null)}
+          draftPlayer={draftPlayer}
+          canDraftPlayer={canDraftPlayer}
+        />
       )}
 
       {message && (

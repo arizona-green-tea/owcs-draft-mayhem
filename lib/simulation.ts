@@ -182,7 +182,8 @@ const negativeMessages = [
   "didn't know what they were aiming at.",
   "emptied a whole clip into a wall.",
   "took tp into a pit.",
-  "forgot where the health packs were."
+  "forgot where the health packs were.",
+  "engaged the feed drive to warp speed."
 ];
 
 function getRandomPlayer(team: Player[]) {
