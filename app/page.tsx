@@ -52,6 +52,8 @@ export default function Home() {
       won: boolean;
       wins: number;
       losses: number;
+      matchResult: MatchResult;
+      enemyTeam: Player[];
     }[]
   >([]);
 
@@ -205,6 +207,8 @@ export default function Home() {
       won: matchResult.wonMatch,
       wins: matchResult.wins,
       losses: matchResult.losses,
+      matchResult,
+      enemyTeam,
     };
 
     setRoundHistory(prev => [...prev, completedRound]);
