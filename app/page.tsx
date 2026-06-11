@@ -46,6 +46,7 @@ export default function Home() {
   const [showMatchIntro, setShowMatchIntro] = useState(false);
   const [showTeamReveal, setShowTeamReveal] = useState(false);
   const draftablePlayers = players.filter(player => canDraftPlayer(player));
+  const [usedEnemyPlayers, setUsedEnemyPlayers] = useState<string[]>([]);
   const [roundHistory, setRoundHistory] = useState<
     {
       roundName: string;
@@ -131,8 +132,13 @@ export default function Home() {
     const generatedEnemyTeam = generateEnemyTeam(
       players,
       finalTeam,
+      usedEnemyPlayers,
       currentRoundIndex
     );
+    setUsedEnemyPlayers(prev => [ 
+      ...prev, 
+      ...generatedEnemyTeam.map(player => player.name), 
+    ]);
 
     let requiredWins: 2 | 3 | 4 = 3;
     if ( currentRoundIndex === rounds.length - 1) {
@@ -296,6 +302,7 @@ export default function Home() {
     setVisibleEventCount(0);
     setGameFinished(false);
     setRoundHistory([]);
+    setUsedEnemyPlayers([]);
   }
 
   return (

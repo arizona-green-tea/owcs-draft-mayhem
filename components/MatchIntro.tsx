@@ -42,7 +42,7 @@ export function MatchIntro({
           />
 
           <h3 className="text-2xl font-bold mb-6">
-            {currentGame.mapName}
+            {currentGame.mode} · {currentGame.mapName}
           </h3>
 
           <div className="text-5xl font-bold text-zinc-400 mb-6">

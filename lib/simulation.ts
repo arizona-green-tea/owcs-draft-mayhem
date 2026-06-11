@@ -279,7 +279,7 @@ export function getTeamNames(players: Player[]) {
 
 function getAllowedTiers(roundIndex: number) {
   if (roundIndex === 0) {
-    return [1, 2, 3];
+    return [1, 2, 3, 4, 5];
   }
 
   if (roundIndex === 1) {
@@ -292,6 +292,7 @@ function getAllowedTiers(roundIndex: number) {
 export function generateEnemyTeam(
   allPlayers: Player[],
   yourTeam: Player[],
+  usedEnemyPlayers: string[] = [],
   roundIndex = 0
 ) {
   const enemyTeam: Player[] = [];
@@ -304,7 +305,8 @@ export function generateEnemyTeam(
 
     return (
       allowedTiers.includes(tier) &&
-      !yourNames.includes(player.name)
+      !yourNames.includes(player.name) &&
+      !usedEnemyPlayers .includes(player.name)
     );
   });
 
@@ -351,7 +353,7 @@ export function simulateSeries(
   while (wins < requiredWins && losses < requiredWins) {
     const mode = modeOrder[games.length] as MapMode;
     const mapName = getRandomMap(mode);
-    
+
     const yourMapBonus = Math.floor(Math.random() * 21) - 10;
     const enemyMapBonus = Math.floor(Math.random() * 21) - 10;
 
