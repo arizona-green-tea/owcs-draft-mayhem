@@ -61,7 +61,7 @@ export function MatchSimulation({
                 <div className="order-1 lg:order-2 flex flex-col items-center text-center w-full min-w-0">
 
                     <h2 className="text-3xl font-bold mb-4">
-                    {roundName}
+                        {roundName}
                     </h2>
 
                     <img

@@ -23,15 +23,17 @@ export function MatchIntro({
   return (
     <section className="mt-8 mb-8 w-full max-w-7xl bg-zinc-900 border border-zinc-700 rounded-xl p-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start w-full">
-        <div className="order-2 lg:order-1 w-full min-w-0"></div>
-          <TeamLineup 
-            title="Your Team" 
-            team={team}
-            compactOnMobile 
-          />
+        <div className="order-2 lg:order-1 w-full min-w-0">
+            <TeamLineup 
+                title="Your Team" 
+                team={team} 
+            />
+        </div>
 
-        <div className="flex flex-col items-center text-center">
-          <h2 className="text-3xl font-bold mb-4">{roundName}</h2>
+        <div className="order-1 lg:order-2 flex flex-col items-center text-center w-full min-w-0">
+          <h2 className="text-3xl font-bold mb-4">
+            {roundName}
+          </h2>
 
           <img
             src={getMapImage(currentGame.mapName)}
@@ -56,9 +58,8 @@ export function MatchIntro({
         </div>
         <div className="order-3 lg:order-3 w-full min-w-0">
           <TeamLineup 
-            title="Enemy Team" 
-            team={enemyTeam} 
-            compactOnMobile
+              title="Enemy Team" 
+              team={enemyTeam} 
           />
         </div>
       </div>

@@ -24,7 +24,13 @@ export function TeamLineup({
     <div className="w-full min-w-0">
       <h3 className="text-xl font-bold mb-4">{title}</h3>
 
-      <div className={compactOnMobile ? "grid grid-cols-2 gap-2 lg:space-y-3 lg:block" : "space-y-3"}>
+      <div
+        className={
+          compactOnMobile
+            ? "grid grid-cols-2 gap-2 lg:space-y-3 lg:block" 
+            : "space-y-3"
+        }
+      >
         {sortRoster(team).map(player => (
           <div
             key={player.name}
