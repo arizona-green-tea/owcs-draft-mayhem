@@ -321,11 +321,17 @@ export default function Home() {
       {!result && (
         <>
           {!matchResult && !showTeamReveal && (
-            <Roster team={team} />
+            <Roster 
+              title=""
+              team={team} 
+            />
           )}
           {showTeamReveal && (
             <section className="mt-8 mb-8 w-full max-w-7xl bg-zinc-900 border border-zinc-700 rounded-xl p-6 text-center">
-              <Roster team={team} />
+              <Roster 
+                title=""
+                team={team} 
+              />
               <button
                 onClick={startFirstMatch}
                 className="mt-6 bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-lg font-bold"
@@ -376,23 +382,23 @@ export default function Home() {
               canDraftPlayer={canDraftPlayer}
             />
           )}
-        <div className="flex gap-4 mt-6">
-          {!result &&
-            !selectedTeam &&
-            !matchResult &&
-            !showMatchIntro && 
-            !showTeamReveal &&
-            (
-            <button
-              onClick={rerollTeams}
-              disabled={rerollsLeft === 0}
-              className="bg-blue-500 hover:bg-blue-600 disabled:bg-zinc-700 disabled:text-zinc-400 px-4 py-2 rounded-lg font-bold"
-            >
-              Reroll ({rerollsLeft})
-            </button>
-          )}
+          <div className="flex gap-4 mt-6">
+            {!result &&
+              !selectedTeam &&
+              !matchResult &&
+              !showMatchIntro && 
+              !showTeamReveal &&
+              (
+              <button
+                onClick={rerollTeams}
+                disabled={rerollsLeft === 0}
+                className="bg-blue-500 hover:bg-blue-600 disabled:bg-zinc-700 disabled:text-zinc-400 px-4 py-2 rounded-lg font-bold"
+              >
+                Reroll ({rerollsLeft})
+              </button>
+            )}
 
-        </div>
+          </div>
         </>
       )}
     </main>

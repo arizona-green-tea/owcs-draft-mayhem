@@ -65,47 +65,47 @@ export function MatchSimulation({
                     </h2>
 
                     <img
-                    src={getMapImage(currentGame.mapName)}
-                    alt={currentGame.mapName}
-                    className="w-full max-w-[700px] aspect-video object-cover rounded-xl mb-4 border border-zinc-700"
+                        src={getMapImage(currentGame.mapName)}
+                        alt={currentGame.mapName}
+                        className="w-full max-w-[700px] aspect-video object-cover rounded-xl mb-4 border border-zinc-700"
                     />
 
                     <h3 className="text-2xl font-bold mb-2">
-                    {currentGame.mode} · {currentGame.mapName}
+                        {currentGame.mode} · {currentGame.mapName}
                     </h3>
 
                     <p className="text-zinc-400 mb-6">
-                    Game {currentGame.gameNumber} ·
-                    Series {liveWins} - {liveLosses}
+                        Game {currentGame.gameNumber} ·
+                        Series {liveWins} - {liveLosses}
                     </p>
 
                     <div className="space-y-3 mb-6 min-h-[140px]">
-                    {visibleEvents.map((event, index) => (
-                        <p
-                        key={index}
-                        className={
-                            event.positive
-                            ? "text-green-400 text-lg"
-                            : "text-red-400 text-lg"
-                        }
-                        >
-                        {event.positive ? "+" : "-"} {event.text}
-                        </p>
-                    ))}
+                        {visibleEvents.map((event, index) => (
+                            <p
+                            key={index}
+                            className={
+                                event.positive
+                                ? "text-green-400 text-lg"
+                                : "text-red-400 text-lg"
+                            }
+                            >
+                            {event.positive ? "+" : "-"} {event.text}
+                            </p>
+                        ))}
                     </div>
 
                     {gameFinished && (
-                    <div
-                        className={
-                        currentGame.won
-                            ? "text-green-400 text-3xl font-bold mb-4"
-                            : "text-red-400 text-3xl font-bold mb-4"
-                        }
-                    >
-                        {currentGame.won
-                        ? "GAME WON"
-                        : "GAME LOST"}
-                    </div>
+                        <div
+                            className={
+                            currentGame.won
+                                ? "text-green-400 text-3xl font-bold mb-4"
+                                : "text-red-400 text-3xl font-bold mb-4"
+                            }
+                        >
+                            {currentGame.won
+                            ? "GAME WON"
+                            : "GAME LOST"}
+                        </div>
                     )}
                     {message && (
                         <div className="flex flex-col items-center gap-4 mt-8">
@@ -124,9 +124,9 @@ export function MatchSimulation({
                         </div>
                     )}
                     {!message && !result && (
-                    <p className="text-zinc-400 mt-2">
-                        Simulating...
-                    </p>
+                        <p className="text-zinc-400 mt-2">
+                            Simulating...
+                        </p>
                     )}
                 </div>
 

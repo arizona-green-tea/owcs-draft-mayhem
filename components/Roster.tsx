@@ -27,8 +27,10 @@ function getPlayersBySlot(team: Player[]) {
 }
 
 export function Roster({
+  title,
   team,
 }: {
+  title: string,
   team: Player[];
 }) {
   const slots = getPlayersBySlot(team);
@@ -36,7 +38,7 @@ export function Roster({
   return (
     <section className="mb-8 w-full max-w-7xl bg-zinc-900 border border-zinc-700 rounded-xl p-6">
       <h2 className="text-3xl font-bold text-center mb-2">
-        Your Team
+        {title}
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {slots.map((player, index) => {

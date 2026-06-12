@@ -39,7 +39,10 @@ export function Results({
             {result}
         </p>
 
-        <Roster team={team} />
+        <Roster 
+            title="Your Team"
+            team={team} 
+        />
 
         <h3 className="text-2xl font-bold mt-8 mb-4">
             Results
@@ -53,7 +56,7 @@ export function Results({
             >
             <button
                 onClick={() =>
-                setExpandedRound(expandedRound === index ? null : index)
+                    setExpandedRound(expandedRound === index ? null : index)
                 }
                 className="w-full flex justify-between items-center px-4 py-4 hover:bg-zinc-700 transition"
             >
@@ -62,72 +65,68 @@ export function Results({
                 </span>
 
                 <span
-                className={
-                    round.won
-                    ? "text-green-400 font-bold"
-                    : "text-red-400 font-bold"
-                }
+                    className={
+                        round.won
+                        ? "text-green-400 font-bold"
+                        : "text-red-400 font-bold"
+                    }
                 >
-                {round.won ? "Won" : "Lost"} {round.wins}-{round.losses}
+                    {round.won ? "Won" : "Lost"} {round.wins}-{round.losses}
                 </span>
             </button>
 
             {expandedRound === index && (
                 <div className="border-t border-zinc-700 p-4 space-y-6">
-                <h4 className="text-xl font-bold">
-                    Opponent
-                </h4>
-
-                <TeamLineup
-                    title="Enemy Team"
-                    team={round.enemyTeam}
-                />
-
-                {round.matchResult.games.map(game => (
-                    <div
-                    key={game.gameNumber}
-                    className="bg-zinc-900 rounded-xl p-4"
-                    >
-                    <div className="flex justify-between items-center mb-4">
-                        <div className="text-xl font-bold">
-                            Game {game.gameNumber}
-                        </div>
-
-                        <div
-                        className={
-                            game.won
-                            ? "text-green-400 font-bold"
-                            : "text-red-400 font-bold"
-                        }
-                        >
-                        {game.won ? "WIN" : "LOSS"}
-                        </div>
-                    </div>
-
-                    <img
-                        src={getMapImage(game.mapName)}
-                        alt={game.mapName}
-                        className="w-full max-w-[500px] aspect-video object-cover rounded-xl mb-4 border border-zinc-700 mx-auto"
+                    <Roster
+                        title="Enemy Team"
+                        team={round.enemyTeam}
                     />
 
-                    <div className="text-lg font-bold mb-4 text-center">
-                        {game.mapName}
-                    </div>
-
-                    <div className="space-y-2">
-                        {game.events.map((event, eventIndex) => (
-                        <p
-                            key={eventIndex}
-                            className={
-                            event.positive
-                                ? "text-green-400"
-                                : "text-red-400"
-                            }
+                    {round.matchResult.games.map(game => (
+                        <div
+                            key={game.gameNumber}
+                            className="bg-zinc-900 rounded-xl p-4"
                         >
-                            {event.positive ? "+" : "-"} {event.text}
-                        </p>
-                        ))}
-                    </div>
+                        <div className="flex justify-between items-center mb-4">
+                            <div className="text-xl font-bold">
+                                Game {game.gameNumber}
+                            </div>
+
+                            <div
+                                className={
+                                    game.won
+                                    ? "text-green-400 font-bold"
+                                    : "text-red-400 font-bold"
+                                }
+                            >
+                                {game.won ? "WIN" : "LOSS"}
+                            </div>
+                        </div>
+
+                        <img
+                            src={getMapImage(game.mapName)}
+                            alt={game.mapName}
+                            className="w-full max-w-[500px] aspect-video object-cover rounded-xl mb-4 border border-zinc-700 mx-auto"
+                        />
+
+                        <div className="text-lg font-bold mb-4 text-center">
+                            {game.mapName}
+                        </div>
+
+                        <div className="space-y-2">
+                            {game.events.map((event, eventIndex) => (
+                            <p
+                                key={eventIndex}
+                                className={
+                                event.positive
+                                    ? "text-green-400"
+                                    : "text-red-400"
+                                }
+                            >
+                                {event.positive ? "+" : "-"} {event.text}
+                            </p>
+                            ))}
+                        </div>
                     </div>
                 ))}
                 </div>
